@@ -1,0 +1,166 @@
+
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tabungan Kita</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f4f5f7;
+      margin: 0;
+      padding: 20px;
+      color: #010000;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    header h1 {
+      color: #e24ab9;
+      margin: 0;
+    }
+    .card {
+      background: #f9f9f9;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    }
+    form {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+    input, select, button {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #000000;
+      font-family: inherit;
+    }
+    .btn {
+      background: #e24ab9;
+      color: #f7f7f7;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #e24ab9;
+    }
+    .saldo {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      background: #dda3c7;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-weight: 600;
+      color: #faf8fa;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #dda3c7;
+    }
+    td:last-child {
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Tabungan Kita</h1>
+      <p>Mput & Galih</p>
+    </header>
+
+    <section class="card">
+      <div class="saldo">
+        <span>Saldo Saat Ini</span>
+        <span id="saldo">Rp 0</span>
+      </div>
+
+      <form id="formTabungan">
+        <input type="date" id="tanggal" required>
+        <input type="text" id="keterangan" placeholder="Keterangan" required>
+        <select id="jenis">
+          <option value="masuk">Pemasukan (+)</option>
+          <option value="keluar">Pengeluaran (-)</option>
+        </select>
+        <input type="number" id="jumlah" placeholder="Jumlah (Rp)" required>
+        <button class="btn" type="submit">Tambah</button>
+      </form>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Tanggal</th>
+            <th>Keterangan</th>
+            <th>Jenis</th>
+            <th>Jumlah</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="daftar"></tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    const form = document.getElementById('formTabungan');
+    const daftar = document.getElementById('daftar');
+    const saldoEl = document.getElementById('saldo');
+
+    let data = JSON.parse(localStorage.getItem('tabungan')) || [];
+
+    function render() {
+      daftar.innerHTML = '';
+      let saldo = 0;
+      data.forEach((item, index) => {
+        saldo += (item.jenis === 'masuk' ? item.jumlah : -item.jumlah);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${item.tanggal}</td>
+          <td>${item.keterangan}</td>
+          <td>${item.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran'}</td>
+          <td>Rp ${item.jumlah.toLocaleString('id-ID')}</td>
+          <td><button onclick="hapus(${index})">Hapus</button></td>
+        `;
+        daftar.appendChild(tr);
+      });
+      saldoEl.textContent = 'Rp ' + saldo.toLocaleString('id-ID');
+      localStorage.setItem('tabungan', JSON.stringify(data));
+    }
+
+    function hapus(index) {
+      data.splice(index, 1);
+      render();
+    }
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const tanggal = document.getElementById('tanggal').value;
+      const keterangan = document.getElementById('keterangan').value;
+      const jenis = document.getElementById('jenis').value;
+      const jumlah = Number(document.getElementById('jumlah').value);
+      data.push({ tanggal, keterangan, jenis, jumlah });
+      form.reset();
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>
