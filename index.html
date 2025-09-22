@@ -152,7 +152,7 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
       const tanggal = document.getElementById('tanggal').value;
-      const keterangan = document.getElementById('nama').value;
+      const nama = document.getElementById('nama').value;
       const jenis = document.getElementById('jenis').value;
       const jumlah = Number(document.getElementById('jumlah').value);
       data.push({ tanggal, nama, jenis, jumlah });
@@ -164,5 +164,3 @@
   </script>
 </body>
 </html>
-
-
