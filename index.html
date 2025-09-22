@@ -94,7 +94,7 @@
 
       <form id="formTabungan">
         <input type="date" id="tanggal" required>
-        <input type="text" id="keterangan" placeholder="Keterangan" required>
+        <input type="text" id="nama" placeholder="nama" required>
         <select id="jenis">
           <option value="masuk">Pemasukan (+)</option>
           <option value="keluar">Pengeluaran (-)</option>
@@ -133,7 +133,7 @@
         const tr = document.createElement('tr');
         tr.innerHTML = `
           <td>${item.tanggal}</td>
-          <td>${item.keterangan}</td>
+          <td>${item.nama}</td>
           <td>${item.jenis === 'masuk' ? 'Pemasukan' : 'Pengeluaran'}</td>
           <td>Rp ${item.jumlah.toLocaleString('id-ID')}</td>
           <td><button onclick="hapus(${index})">Hapus</button></td>
@@ -152,10 +152,10 @@
     form.addEventListener('submit', e => {
       e.preventDefault();
       const tanggal = document.getElementById('tanggal').value;
-      const keterangan = document.getElementById('keterangan').value;
+      const keterangan = document.getElementById('nama').value;
       const jenis = document.getElementById('jenis').value;
       const jumlah = Number(document.getElementById('jumlah').value);
-      data.push({ tanggal, keterangan, jenis, jumlah });
+      data.push({ tanggal, nama, jenis, jumlah });
       form.reset();
       render();
     });
@@ -164,4 +164,5 @@
   </script>
 </body>
 </html>
+
 
